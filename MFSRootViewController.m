@@ -129,8 +129,11 @@
 		}];
 		[_specifiers addObjectsFromArray:appSpecifiers];
 	}
-	[(UINavigationItem*)self.navigationItem setTitle:@"FXStore"];
-	self.navigationController.navigationBar.prefersLargeTitles = YES;
+	self.navigationItem.title = @"FXStore";
+	if (@available(iOS 11.0, *)) {
+		self.navigationController.navigationBar.prefersLargeTitles = YES;
+		self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeAlways;
+	}
 	UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(downloadApp)];
 	addButton.tintColor = [UIColor labelColor];
 	self.navigationItem.rightBarButtonItem = addButton;
