@@ -3,16 +3,9 @@
 #import "CoreServices.h"
 #import <SystemConfiguration/SystemConfiguration.h>
 
-@interface LSApplicationProxy : NSObject
+@interface LSApplicationProxy (Private)
 @property (nonatomic, readonly) NSString *applicationIdentifier;
 @property (nonatomic, readonly) NSString *bundleIdentifier;
-@property (nonatomic, readonly) NSString *localizedName;
-@property (nonatomic, readonly) NSURL *bundleURL;
-@end
-
-@interface LSApplicationWorkspace : NSObject
-+ (id)defaultWorkspace;
-- (void)enumerateApplicationsOfType:(int)type block:(void (^)(LSApplicationProxy *appProxy))block;
 @end
 
 @interface UIImage (PrivateIcon)
