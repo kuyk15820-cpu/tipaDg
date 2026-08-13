@@ -3,6 +3,18 @@
 #import "CoreServices.h"
 #import <SystemConfiguration/SystemConfiguration.h>
 
+@interface LSApplicationProxy : NSObject
+@property (nonatomic, readonly) NSString *applicationIdentifier;
+@property (nonatomic, readonly) NSString *bundleIdentifier;
+@property (nonatomic, readonly) NSString *localizedName;
+@property (nonatomic, readonly) NSURL *bundleURL;
+@end
+
+@interface LSApplicationWorkspace : NSObject
++ (id)defaultWorkspace;
+- (void)enumerateApplicationsOfType:(int)type block:(void (^)(LSApplicationProxy *appProxy))block;
+@end
+
 @interface UIImage (PrivateIcon)
 + (UIImage *)_applicationIconImageForBundleIdentifier:(NSString *)bundleIdentifier format:(int)format scale:(CGFloat)scale;
 @end
@@ -57,12 +69,7 @@
 			[appSpecifier setProperty:appProxy.bundleURL forKey:@"bundleURL"];
 			[appSpecifier setProperty:@YES forKey:@"enabled"];
 
-			NSString* bundleIdentifier = nil;
-			if ([appProxy respondsToSelector:@selector(applicationIdentifier)]) {
-				bundleIdentifier = [appProxy performSelector:@selector(applicationIdentifier)];
-			} else if ([appProxy respondsToSelector:@selector(bundleIdentifier)]) {
-				bundleIdentifier = [appProxy performSelector:@selector(bundleIdentifier)];
-			}
+			NSString* bundleIdentifier = appProxy.applicationIdentifier ?: appProxy.bundleIdentifier;
 
 			NSString* version = nil;
 			if (appProxy.bundleURL) {
