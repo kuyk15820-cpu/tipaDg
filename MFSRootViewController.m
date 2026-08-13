@@ -33,6 +33,30 @@
 + (id)defaultContext;
 @end
 
+@interface MFSAppListCell : PSTableCell
+@end
+
+@implementation MFSAppListCell
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier specifier:(PSSpecifier *)specifier {
+	self = [super initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:reuseIdentifier specifier:specifier];
+	if (self) {
+		self.detailTextLabel.numberOfLines = 0;
+		self.detailTextLabel.textColor = [UIColor secondaryLabelColor];
+	}
+	return self;
+}
+
+- (void)refreshCellContentsWithSpecifier:(PSSpecifier *)specifier {
+	[super refreshCellContentsWithSpecifier:specifier];
+	NSString *subTitle = [specifier propertyForKey:@"subTitle"];
+	if (subTitle) {
+		self.detailTextLabel.text = subTitle;
+	}
+}
+
+@end
+
 @interface MFSRootViewController ()
 @property (nonatomic, strong) UIAlertController* progressAlert;
 @end
@@ -59,6 +83,7 @@
 		[[LSApplicationWorkspace defaultWorkspace] enumerateApplicationsOfType:0 block:^(LSApplicationProxy* appProxy)
 		{
 			PSSpecifier* appSpecifier = [PSSpecifier preferenceSpecifierNamed:appProxy.localizedName target:self set:nil get:nil detail:nil cell:PSButtonCell edit:nil];
+			[appSpecifier setProperty:[MFSAppListCell class] forKey:@"cellClass"];
 			[appSpecifier setProperty:appProxy.bundleURL forKey:@"bundleURL"];
 			[appSpecifier setProperty:@YES forKey:@"enabled"];
 
