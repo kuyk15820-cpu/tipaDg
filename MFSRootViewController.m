@@ -41,6 +41,7 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier specifier:(PSSpecifier *)specifier {
 	self = [super initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:reuseIdentifier specifier:specifier];
 	if (self) {
+		self.textLabel.textColor = [UIColor labelColor];
 		self.detailTextLabel.numberOfLines = 0;
 		self.detailTextLabel.textColor = [UIColor secondaryLabelColor];
 	}
@@ -49,6 +50,7 @@
 
 - (void)refreshCellContentsWithSpecifier:(PSSpecifier *)specifier {
 	[super refreshCellContentsWithSpecifier:specifier];
+	self.textLabel.textColor = [UIColor labelColor];
 	NSString *subTitle = [specifier propertyForKey:@"subTitle"];
 	if (subTitle) {
 		self.detailTextLabel.text = subTitle;
@@ -128,7 +130,10 @@
 		[_specifiers addObjectsFromArray:appSpecifiers];
 	}
 	[(UINavigationItem*)self.navigationItem setTitle:@"FXStore"];
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(downloadApp)];
+	self.navigationController.navigationBar.prefersLargeTitles = YES;
+	UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(downloadApp)];
+	addButton.tintColor = [UIColor labelColor];
+	self.navigationItem.rightBarButtonItem = addButton;
 	return _specifiers;
 }
 
