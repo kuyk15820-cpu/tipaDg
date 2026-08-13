@@ -57,8 +57,18 @@
 			[appSpecifier setProperty:appProxy.bundleURL forKey:@"bundleURL"];
 			[appSpecifier setProperty:@YES forKey:@"enabled"];
 
-			NSString* bundleIdentifier = appProxy.applicationIdentifier;
-			NSString* version = appProxy.shortVersionString;
+			NSString* bundleIdentifier = nil;
+			if ([appProxy respondsToSelector:@selector(applicationIdentifier)]) {
+				bundleIdentifier = [appProxy performSelector:@selector(applicationIdentifier)];
+			} else if ([appProxy respondsToSelector:@selector(bundleIdentifier)]) {
+				bundleIdentifier = [appProxy performSelector:@selector(bundleIdentifier)];
+			}
+
+			NSString* version = nil;
+			if (appProxy.bundleURL) {
+				NSDictionary* infoPlist = [NSDictionary dictionaryWithContentsOfFile:[appProxy.bundleURL.path stringByAppendingPathComponent:@"Info.plist"]];
+				version = infoPlist[@"CFBundleShortVersionString"];
+			}
 
 			if (version && bundleIdentifier) {
 				[appSpecifier setProperty:[NSString stringWithFormat:@"Version: %@\nIdentifier: %@", version, bundleIdentifier] forKey:@"subTitle"];
